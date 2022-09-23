@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="96cc884d-0be9-4c72-8246-7350387a13cb" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2AfXypkhTD06fHBETHBJQcRUzep" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/home/elbieh/Desktop/baserow_be_new_version/src",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/baserow" />
+      <recent name="$PROJECT_DIR$/baserow/t2" />
+      <recent name="$PROJECT_DIR$/baserow/t2/models" />
+      <recent name="$PROJECT_DIR$/baserow/config/settings" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/baserow/t2/views" />
+      <recent name="$PROJECT_DIR$/baserow/t2/viewss" />
+      <recent name="$PROJECT_DIR$/baserow/config" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="manage" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="src" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="DJANGO_SETTINGS_MODULE" value="config.settings.dev" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/baserow" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <EXTENSION ID="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" />
+        </ENTRIES>
+      </EXTENSION>
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/baserow/manage.py" />
+      <option name="PARAMETERS" value="runserver" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.manage" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="96cc884d-0be9-4c72-8246-7350387a13cb" name="Changes" comment="" />
+      <created>1655401870334</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1655401870334</updated>
+      <workItem from="1655401871427" duration="262000" />
+      <workItem from="1655402140836" duration="1070000" />
+      <workItem from="1655403229275" duration="21000" />
+      <workItem from="1655403250572" duration="1837000" />
+      <workItem from="1655405164406" duration="7536000" />
+      <workItem from="1655414443050" duration="47000" />
+      <workItem from="1655416638891" duration="1504000" />
+      <workItem from="1655620048458" duration="63000" />
+      <workItem from="1655803294141" duration="1989000" />
+      <workItem from="1655884088842" duration="1216000" />
+      <workItem from="1655892783807" duration="19000" />
+      <workItem from="1656495998352" duration="3507000" />
+      <workItem from="1656582678375" duration="24000" />
+      <workItem from="1656594326997" duration="1273000" />
+      <workItem from="1656785067583" duration="1887000" />
+      <workItem from="1656788039969" duration="31000" />
+      <workItem from="1656833273637" duration="13000" />
+      <workItem from="1658216267771" duration="2830000" />
+      <workItem from="1658237769088" duration="59000" />
+      <workItem from="1658238401121" duration="28000" />
+      <workItem from="1658734837622" duration="325000" />
+      <workItem from="1658736343203" duration="10290000" />
+      <workItem from="1658823106052" duration="2879000" />
+      <workItem from="1658826551323" duration="5611000" />
+      <workItem from="1658851990658" duration="605000" />
+      <workItem from="1658905714333" duration="907000" />
+      <workItem from="1658943464837" duration="770000" />
+      <workItem from="1659008441778" duration="742000" />
+      <workItem from="1659252681818" duration="3120000" />
+      <workItem from="1659255907099" duration="8923000" />
+      <workItem from="1659265542113" duration="10463000" />
+      <workItem from="1659277594749" duration="15000" />
+      <workItem from="1659345530736" duration="1524000" />
+      <workItem from="1659347118454" duration="2249000" />
+      <workItem from="1659354597177" duration="13000" />
+      <workItem from="1659356280152" duration="4000" />
+      <workItem from="1659357021324" duration="605000" />
+      <workItem from="1659358230348" duration="14000" />
+      <workItem from="1659433785676" duration="4673000" />
+      <workItem from="1659455596020" duration="399000" />
+      <workItem from="1659456832843" duration="69000" />
+      <workItem from="1659530100240" duration="5238000" />
+      <workItem from="1659599390189" duration="2054000" />
+      <workItem from="1659618743583" duration="11000" />
+      <workItem from="1659857735629" duration="3975000" />
+      <workItem from="1659863298332" duration="13284000" />
+      <workItem from="1659877022992" duration="16000" />
+      <workItem from="1659944146025" duration="611000" />
+      <workItem from="1659948478950" duration="3794000" />
+      <workItem from="1660461130673" duration="4510000" />
+      <workItem from="1660466905241" duration="56000" />
+      <workItem from="1660742822943" duration="1839000" />
+      <workItem from="1660815061921" duration="1161000" />
+      <workItem from="1661064999484" duration="296000" />
+      <workItem from="1661076998334" duration="13000" />
+      <workItem from="1661676132399" duration="1577000" />
+      <workItem from="1661680176395" duration="1976000" />
+      <workItem from="1661683387167" duration="17000" />
+      <workItem from="1661775485431" duration="625000" />
+      <workItem from="1661844409646" duration="894000" />
+      <workItem from="1661933868926" duration="16000" />
+      <workItem from="1662451619576" duration="954000" />
+      <workItem from="1662543181872" duration="7464000" />
+      <workItem from="1662887540655" duration="749000" />
+      <workItem from="1662896838252" duration="14000" />
+      <workItem from="1662898760469" duration="10000" />
+      <workItem from="1662900214621" duration="180000" />
+      <workItem from="1662900538240" duration="478000" />
+      <workItem from="1662907006081" duration="396000" />
+      <workItem from="1662907800266" duration="3066000" />
+      <workItem from="1662910897923" duration="19000" />
+      <workItem from="1662981094205" duration="24000" />
+      <workItem from="1662983568525" duration="15000" />
+      <workItem from="1662983872048" duration="10000" />
+      <workItem from="1662988596049" duration="146000" />
+      <workItem from="1662990235027" duration="727000" />
+      <workItem from="1663059298153" duration="15000" />
+      <workItem from="1663078812144" duration="1086000" />
+      <workItem from="1663080228933" duration="10000" />
+      <workItem from="1663139617375" duration="1713000" />
+      <workItem from="1663489664078" duration="189000" />
+      <workItem from="1663490068502" duration="1110000" />
+      <workItem from="1663494057633" duration="1267000" />
+      <workItem from="1663507169706" duration="2933000" />
+      <workItem from="1663576431308" duration="1436000" />
+      <workItem from="1663578173478" duration="1455000" />
+      <workItem from="1663581052573" duration="25000" />
+      <workItem from="1663668119273" duration="236000" />
+      <workItem from="1663668374490" duration="1518000" />
+      <workItem from="1663672859657" duration="3915000" />
+      <workItem from="1663682994499" duration="1503000" />
+      <workItem from="1663684509829" duration="2801000" />
+      <workItem from="1663687399394" duration="18000" />
+      <workItem from="1663687424943" duration="668000" />
+      <workItem from="1663688101498" duration="244000" />
+      <workItem from="1663688353030" duration="421000" />
+      <workItem from="1663688783425" duration="44000" />
+      <workItem from="1663688836258" duration="71000" />
+      <workItem from="1663688929083" duration="1620000" />
+      <workItem from="1663741843590" duration="7013000" />
+      <workItem from="1663752183544" duration="3000" />
+      <workItem from="1663916194157" duration="187000" />
+      <workItem from="1663949408855" duration="156000" />
+      <workItem from="1663949590714" duration="306000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/baserow/contrib/database/api/views/grid/views.py</url>
+          <line>246</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/baserow/contrib/database/api/views/grid/views.py</url>
+          <line>264</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/baserow/contrib/database/api/rows/views.py</url>
+          <line>718</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/baserow/contrib/database/api/rows/views.py</url>
+          <line>723</line>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/baserow/contrib/database/api/rows/views.py</url>
+          <line>738</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/baserow/contrib/database/api/rows/views.py</url>
+          <line>749</line>
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/baserow/t2/views/crunch_base.py</url>
+          <line>211</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/baserow/t2/views/crunch_base.py</url>
+          <line>264</line>
+          <option name="timeStamp" value="34" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/baserow/t2/views/crunch_base.py</url>
+          <line>265</line>
+          <option name="timeStamp" value="35" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/baserow/t2/views/crunch_base.py</url>
+          <line>287</line>
+          <option name="timeStamp" value="37" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/baserow/t2/views/crunch_base.py</url>
+          <line>280</line>
+          <option name="timeStamp" value="40" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/baserow/t2/recievers.py</url>
+          <option name="timeStamp" value="41" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/venv/lib/python3.8/site-packages/rest_framework/generics.py</url>
+          <line>157</line>
+          <option name="timeStamp" value="45" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/venv/lib/python3.8/site-packages/rest_framework/generics.py</url>
+          <line>158</line>
+          <option name="timeStamp" value="46" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/venv/lib/python3.8/site-packages/rest_framework/generics.py</url>
+          <line>159</line>
+          <option name="timeStamp" value="47" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/venv/lib/python3.8/site-packages/rest_framework/generics.py</url>
+          <line>161</line>
+          <option name="timeStamp" value="48" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/venv/lib/python3.8/site-packages/rest_framework/generics.py</url>
+          <line>168</line>
+          <option name="timeStamp" value="49" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/venv/lib/python3.8/site-packages/rest_framework/generics.py</url>
+          <line>176</line>
+          <option name="timeStamp" value="50" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/venv/lib/python3.8/site-packages/rest_framework/generics.py</url>
+          <line>177</line>
+          <option name="timeStamp" value="51" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/venv/lib/python3.8/site-packages/rest_framework/generics.py</url>
+          <line>170</line>
+          <option name="timeStamp" value="52" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/venv/lib/python3.8/site-packages/rest_framework/generics.py</url>
+          <line>169</line>
+          <option name="timeStamp" value="53" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/src$manage.coverage" NAME="manage Coverage Results" MODIFIED="1663949469491" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/baserow" />
+  </component>
+</project>
