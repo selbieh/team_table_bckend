@@ -31,7 +31,7 @@ class RowCommentHandler:
         return (
             RowComment.objects.select_related("user")
             .filter(table_id=table_id, row_id=row_id)
-            .all()
+            .all().order_by('-id')
         )
 
     @staticmethod

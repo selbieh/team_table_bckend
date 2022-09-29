@@ -66,7 +66,7 @@ class RowCommentView(APIView):
                 "and defines how many rows should be returned.",
             ),
         ],
-        tags=["Database table rows"],
+        tags=["t2"],
         operation_id="get_row_comments",
         description="Returns all row comments for the specified table and row.",
         responses={
@@ -119,7 +119,7 @@ class RowCommentView(APIView):
                 description="The row to create a comment for.",
             ),
         ],
-        tags=["Database table rows"],
+        tags=["t2"],
         operation_id="create_row_comment",
         description="Creates a comment on the specified row.",
         request=RowCommentCreateSerializer,
