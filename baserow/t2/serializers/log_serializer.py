@@ -16,7 +16,7 @@ class FieldActionLogSerializer(serializers.ModelSerializer):
         table = Table.objects.get(id=t_id).get_model()
         row = table.objects.get(id=r_id)
         related_items = getattr(row, filed).all()
-        return related_items, str(related_items.first()._meta.model).split('Table')[1].split('Model')[0]
+        return related_items, str(related_items.first()._meta.model).split('Table')[1].split('Model')[0] if related_items.first() else None
 
     @staticmethod
     def find_serializer_field(table):
@@ -42,7 +42,8 @@ class FieldActionLogSerializer(serializers.ModelSerializer):
             is_link_row = bool(LinkRowField.objects.filter(id=k.split('_')[1]))
             table_param = self.context['request'].query_params.get('table')
             row_param = self.context['request'].query_params.get('row')
-            if isinstance(v, list) and all([type(i) == int for i in v]) and is_link_row and table_param and row_param:
+            reversed_link_row, reverse_table_id = self.find_reversed_link_row(table_param, row_param, k)
+            if v and reversed_link_row and reverse_table_id and isinstance(v, list) and all([type(i) == int for i in v]) and is_link_row and table_param and row_param:
                 reversed_link_row, reverse_table_id = self.find_reversed_link_row(table_param, row_param, k)
                 table = Table.objects.get(id=reverse_table_id)
                 model = table.get_model()
