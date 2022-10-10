@@ -40,7 +40,7 @@ class FieldActionLogSerializer(serializers.ModelSerializer):
         replaced_new_values = {}
         for k, v in values.items():
             is_link_row = bool(LinkRowField.objects.filter(id=k.split('_')[1]))
-            table_param = self.context['request'].query_params.get('table'),
+            table_param = self.context['request'].query_params.get('table')
             row_param = self.context['request'].query_params.get('row')
             if isinstance(v, list) and all([type(i) == int for i in v]) and is_link_row and table_param and row_param:
                 reversed_link_row, reverse_table_id = self.find_reversed_link_row(table_param, row_param, k)
