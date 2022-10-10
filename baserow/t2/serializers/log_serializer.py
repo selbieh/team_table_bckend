@@ -16,7 +16,10 @@ class FieldActionLogSerializer(serializers.ModelSerializer):
         table = Table.objects.get(id=t_id).get_model()
         row = table.objects.get(id=r_id)
         related_items = getattr(row, filed).all()
-        return related_items, str(related_items.first()._meta.model).split('Table')[1].split('Model')[0] if related_items.first() else None
+        if related_items :
+            return related_items, str(related_items.first()._meta.model).split('Table')[1].split('Model')[0]
+        else:
+            return None,None
 
     @staticmethod
     def find_serializer_field(table):
@@ -42,14 +45,16 @@ class FieldActionLogSerializer(serializers.ModelSerializer):
             is_link_row = bool(LinkRowField.objects.filter(id=k.split('_')[1]))
             table_param = self.context['request'].query_params.get('table')
             row_param = self.context['request'].query_params.get('row')
-            reversed_link_row, reverse_table_id = self.find_reversed_link_row(table_param, row_param, k)
-            if v and reversed_link_row and reverse_table_id and isinstance(v, list) and all([type(i) == int for i in v]) and is_link_row and table_param and row_param:
+            if  v and isinstance(v, list) and all([type(i) is int for i in v]) and is_link_row and table_param and row_param:
                 reversed_link_row, reverse_table_id = self.find_reversed_link_row(table_param, row_param, k)
-                table = Table.objects.get(id=reverse_table_id)
-                model = table.get_model()
-                field_to_serialize = self.find_serializer_field(table)
-                serialized_date = get_serializer_class(model, field_to_serialize)(reversed_link_row, many=True).data
-                replaced_new_values[k] = serialized_date
+                if reversed_link_row and  reverse_table_id:
+                    table = Table.objects.get(id=reverse_table_id)
+                    model = table.get_model()
+                    field_to_serialize = self.find_serializer_field(table)
+                    serialized_date = get_serializer_class(model, field_to_serialize)(reversed_link_row, many=True).data
+                    replaced_new_values[k] = serialized_date
+                else:
+                    replaced_new_values[k] = v
             else:
                 replaced_new_values[k] = v
         return replaced_new_values
