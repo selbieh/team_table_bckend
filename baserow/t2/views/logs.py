@@ -1,5 +1,6 @@
 from django_filters import rest_framework as filters
 from rest_framework.generics import ListAPIView
+from rest_framework.pagination import LimitOffsetPagination
 
 from baserow.core.models import Action
 from baserow.t2.filters import ModelContainJsonFilter
@@ -7,6 +8,7 @@ from baserow.t2.serializers.log_serializer import FieldActionLogSerializer
 
 
 class FieldActionLogsView(ListAPIView):
+    pagination_class = LimitOffsetPagination
     permission_classes = []
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = ModelContainJsonFilter
