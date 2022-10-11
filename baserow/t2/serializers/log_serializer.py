@@ -12,10 +12,10 @@ class FieldActionLogSerializer(serializers.ModelSerializer):
     params = serializers.SerializerMethodField()
 
     @staticmethod
-    def find_reversed_link_row(t_id, r_id, filed):
+    def find_reversed_link_row(t_id, r_id, v):
         table = Table.objects.get(id=t_id).get_model()
-        row = table.objects.get(id=r_id)
-        related_items = getattr(row, filed).all()
+        # row = table.objects.get(id=r_id)
+        related_items = table.objects.filter(id__in=v)#getattr(row, filed).all()
         if related_items :
             return related_items, str(related_items.first()._meta.model).split('Table')[1].split('Model')[0]
         else:
@@ -28,8 +28,8 @@ class FieldActionLogSerializer(serializers.ModelSerializer):
 
     def get_params(self, obj):
 
-        new_row_values = obj.params.get('new_row_values')
-        original_row_values = obj.params.get('original_row_values')
+        new_row_values = obj.params.get('new_row_values',None)
+        original_row_values = obj.params.get('original_row_values',None)
         if original_row_values:
             original_row_values_serialized = self.re_serializer_nested_row(original_row_values)
             obj.params.update({'original_row_values': original_row_values_serialized})
@@ -46,7 +46,7 @@ class FieldActionLogSerializer(serializers.ModelSerializer):
             table_param = self.context['request'].query_params.get('table')
             row_param = self.context['request'].query_params.get('row')
             if  v and isinstance(v, list) and all([type(i) is int for i in v]) and is_link_row and table_param and row_param:
-                reversed_link_row, reverse_table_id = self.find_reversed_link_row(table_param, row_param, k)
+                reversed_link_row, reverse_table_id = self.find_reversed_link_row(table_param, row_param, v)
                 if reversed_link_row and  reverse_table_id:
                     table = Table.objects.get(id=reverse_table_id)
                     model = table.get_model()
