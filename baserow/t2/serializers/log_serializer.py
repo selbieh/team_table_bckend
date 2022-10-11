@@ -29,13 +29,13 @@ class FieldActionLogSerializer(serializers.ModelSerializer):
     def get_params(self, obj):
 
         new_row_values = obj.params.get('new_row_values')
-        old_row_values = obj.params.get('original_row_values')
+        original_row_values = obj.params.get('original_row_values')
+        if original_row_values:
+            original_row_values_serialized = self.re_serializer_nested_row(original_row_values)
+            obj.params.update({'original_row_values': original_row_values_serialized})
         if new_row_values:
-            new_values = self.re_serializer_nested_row(new_row_values)
-            obj.params.update({'new_row_values': new_values})
-        if old_row_values:
-            new_values = self.re_serializer_nested_row(old_row_values)
-            obj.params.update({'original_row_values': new_values})
+            new_row_values_serialized = self.re_serializer_nested_row(new_row_values)
+            obj.params.update({'new_row_values': new_row_values_serialized})
 
         return obj.params
 
