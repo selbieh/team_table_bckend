@@ -34,7 +34,7 @@ class StaffUserControlSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         super(StaffUserControlSerializer, self).update(instance, validated_data)
-        if validated_data['password']:
+        if validated_data.get('password'):
             instance.set_password(validated_data['password'])
             instance.save()
         return instance
