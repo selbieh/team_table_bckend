@@ -12,12 +12,12 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from api.errors import ERROR_USER_NOT_IN_GROUP
-from api.exceptions import RequestBodyValidationException
-from api.schemas import get_error_schema, CLIENT_SESSION_ID_SCHEMA_PARAMETER
-from api.user_files.errors import ERROR_USER_FILE_DOES_NOT_EXIST
-from api.utils import validate_data
 from baserow.api.decorators import map_exceptions
+from baserow.api.errors import ERROR_USER_NOT_IN_GROUP
+from baserow.api.exceptions import RequestBodyValidationException
+from baserow.api.schemas import get_error_schema, CLIENT_SESSION_ID_SCHEMA_PARAMETER
+from baserow.api.user_files.errors import ERROR_USER_FILE_DOES_NOT_EXIST
+from baserow.api.utils import validate_data
 from baserow.contrib.database.api.fields.errors import ERROR_INVALID_SELECT_OPTION_VALUES
 from baserow.contrib.database.api.rows.errors import ERROR_ROW_DOES_NOT_EXIST
 from baserow.contrib.database.api.rows.serializers import get_row_serializer_class, RowSerializer, \
@@ -39,7 +39,7 @@ from baserow.core.user_files.exceptions import UserFileDoesNotExist
 from baserow.t2.errors import ERROR_CB_URL_NOT_EXIST
 from baserow.t2.exceptions import CbUrlDoesNotExist
 from baserow.t2.models.CrunchBaseLogs import CrunchBaseLogs
-from t2.serializers.crunch_base import CrunchBaseOrganizationSerializer, CrunchBaseFounderSerializer
+from baserow.t2.serializers.crunch_base import CrunchBaseOrganizationSerializer, CrunchBaseFounderSerializer
 
 
 class CrunchBaseOrganization(APIView):
@@ -216,13 +216,13 @@ class CrunchBaseOrganization(APIView):
         return {
             validated_data['cb_uuid_field_name']: cb_call_response['properties']['identifier']['uuid'],
             validated_data['company_total_raised_value_field_name']:
-                cb_call_response.get('cards',{}).get('fields',{}).get('funding_total',{}).get('value',0)
+                cb_call_response.get('cards', {}).get('fields', {}).get('funding_total', {}).get('value', 0)
         }
 
 
 class CrunchBaseFounder(APIView):
     authentication_classes = APIView.authentication_classes + [TokenAuthentication]
-    permission_classes =[] #(IsAuthenticated,)
+    permission_classes = []  # (IsAuthenticated,)
 
     @map_exceptions(
         {
@@ -253,22 +253,31 @@ class CrunchBaseFounder(APIView):
         if not cb_url_field_value or not cb_url_field_value[0]['value']:
             raise CbUrlDoesNotExist
         try:
-            cb_url_field_value=cb_url_field_value[0]['value']
+            cb_url_field_value = cb_url_field_value[0]['value']
         except:
             raise CbUrlDoesNotExist
         permalink = self.get_cb_url(request, cb_url_field_value)
         cb_call_response = self.call_cb(request, permalink)
-        given_date=self.given_date(request,serializer.validated_data,row)
-        filterd_response=self.filter_response( cb_call_response,given_date)
-        calculated_filtered_response=self.calculate_resulte_for_filtered_response(request,filterd_response)
-        raise_count, raised_values=calculated_filtered_response
+        given_date = self.given_date(request, serializer.validated_data, row)
+        company_of_interest = self.get_company_of_interest(request, serializer.validated_data, row)
+        filterd_response = self.filter_response(cb_call_response, given_date, company_of_interest)
+        calculated_filtered_response = self.calculate_resulte_for_filtered_response(request, filterd_response)
+        raise_count, raised_values = calculated_filtered_response
         request.data.clear()
-        request.data.update(self.map_data(request,serializer.validated_data,raise_count,raised_values))
+        request.data.update(self.map_data(request, serializer.validated_data, raise_count, raised_values))
         return self.patch_item(request, table_id, row_id)
-        #TODO map_resonse_and_save_in patch call
-        #request.data.clear()
+        # TODO map_resonse_and_save_in patch call
+        # request.data.clear()
         # request.data.update(self.map_cb_response_to_request_data(cb_call_response, serializer.validated_data))
         # return self.patch_item(request, table_id, row_id)
+
+    def get_company_of_interest(self, request, validated_data, row):
+        org_of_interest_uuid = []
+        column_value=getattr(row,validated_data.get('organization_of_interest_link_table')).all()
+        if column_value:
+            field_query_string=f'{validated_data.get("organization_of_interest_from_org_founder_map")}__'+f'{validated_data.get("organization_of_interest_cb_link")}'
+            org_of_interest_uuid=list(set(column_value.values_list(field_query_string,flat=True)))
+        return org_of_interest_uuid
 
     def get_cb_url(self, request, cb_field_value):
         try:
@@ -277,19 +286,25 @@ class CrunchBaseFounder(APIView):
         except:
             raise CbUrlDoesNotExist
 
-    def filter_response(self, response, given_date):
-        filtered_response=[]
-        if isinstance(response,list):
+    def filter_response(self, response, given_date, company_of_interest):
+        filtered_response = []
+        if isinstance(response, list):
             raise serializers.ValidationError(detail=f'{response}')
-        all_founded_organizations = response.get('cards',{}).get('founded_organizations',[])
+        all_founded_organizations = response.get('cards', {}).get('founded_organizations', [])
         filtered_founded_organizations_by_type = [item for item in all_founded_organizations if
-                                                 'company_type' in item.keys() and item['company_type'] == 'for_profit']
+                                                  'company_type' in item.keys() and item[
+                                                      'company_type'] == 'for_profit' and item.get('properties', {}).get('identifier', {}).get('uuid',None) not in company_of_interest]
+
+        # this step to exclude the org of intreset
+        # filtered_founded_organizations_by_type_and_interest = [item for item in filtered_founded_organizations_by_type if
+        #                                           ]
         for i in filtered_founded_organizations_by_type:
             company_founded_year = i.get('founded_on') or None
-            #company with missing founded year or founded year <= date
-            if not company_founded_year or (company_founded_year['precision'] == 'year' and datetime.datetime.strptime(company_founded_year['value'],'%Y-%m-%d').date().year < given_date.year):
+            # company with missing founded year or founded year <= date
+            if not company_founded_year or (company_founded_year['precision'] == 'year' and datetime.datetime.strptime(
+                    company_founded_year['value'], '%Y-%m-%d').date().year < given_date.year):
                 filtered_response.append(i)
-            elif datetime.datetime.strptime(company_founded_year['value'],'%Y-%m-%d').date() <= given_date:
+            elif datetime.datetime.strptime(company_founded_year['value'], '%Y-%m-%d').date() < given_date:
                 filtered_response.append(i)
         return filtered_response
 
@@ -300,34 +315,36 @@ class CrunchBaseFounder(APIView):
         CrunchBaseLogs.objects.create(url=baseurl, response=response.json(), entity_type=CrunchBaseLogs.FOUNDER)
         return response.json()
 
-    def given_date(self,request,validated_data,row):
-        now_data=datetime.date.today()
+    def given_date(self, request, validated_data, row):
+        now_data = datetime.date.today()
         try:
-            org_of_interest=getattr(getattr(row,validated_data['organization_of_interest_field_name']).all().first(),validated_data['org_founder_map_founding_date_field_name'])
+            org_of_interest = getattr(getattr(row, validated_data['organization_of_interest_field_name']).all().first(),
+                                      validated_data['org_founder_map_founding_date_field_name'])
             if not org_of_interest:
                 return now_data
-            x=datetime.datetime.strptime(org_of_interest,'%B %m, %Y')
+            x = datetime.datetime.strptime(org_of_interest, '%B %m, %Y')
             return x.date()
         except:
             return now_data
 
-    def calculate_resulte_for_filtered_response(self,request,filtered_response):
-        total_value_list=[]
-        count=0
+    def calculate_resulte_for_filtered_response(self, request, filtered_response):
+        total_value_list = []
+        count = 0
         for company in filtered_response:
             baseurl = f"https://api.crunchbase.com/api/v4/entities/organizations/{company['identifier']['uuid']}"
             url = f'{baseurl}?card_ids=fields&user_key={settings.CB_KEY}'
-            company_response=requests.get(url).json()
-            company_raised_value=company_response.get('cards',{}).get('fields',{}).get('funding_total',{}).get('value',0)
+            company_response = requests.get(url).json()
+            company_raised_value = company_response.get('cards', {}).get('fields', {}).get('funding_total', {}).get(
+                'value', 0)
             if company_raised_value:
                 total_value_list.append(company_raised_value)
-                count+=1
-        return count,sum(total_value_list)
+                count += 1
+        return count, sum(total_value_list)
 
-    def map_data(self,request,validated_data,raise_count,raised_values):
+    def map_data(self, request, validated_data, raise_count, raised_values):
         return {
-            validated_data['company_prev_raised_count_field_name']:raise_count,
-            validated_data['company_total_raised_value_field_name']:raised_values
+            validated_data['company_prev_raised_count_field_name']: raise_count,
+            validated_data['company_total_raised_value_field_name']: raised_values
         }
 
     @extend_schema(
