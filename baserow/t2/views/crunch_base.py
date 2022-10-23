@@ -53,7 +53,7 @@ class CrunchBaseOrganization(APIView):
             RowDoesNotExist: ERROR_ROW_DOES_NOT_EXIST,
             NoPermissionToTable: ERROR_NO_PERMISSION_TO_TABLE,
             CbUrlDoesNotExist: ERROR_CB_URL_NOT_EXIST,
-            CbUrlDoesNotExist:ERROR_ORG_OF_INTEREST_CB_URL_NOT_EXIST
+            OrgOfInterestCBURLNotExist: ERROR_ORG_OF_INTEREST_CB_URL_NOT_EXIST
 
         }
     )
@@ -154,7 +154,8 @@ class CrunchBaseOrganization(APIView):
             AllProvidedMultipleSelectValuesMustBeSelectOption: ERROR_INVALID_SELECT_OPTION_VALUES,
             NoPermissionToTable: ERROR_NO_PERMISSION_TO_TABLE,
             UserFileDoesNotExist: ERROR_USER_FILE_DOES_NOT_EXIST,
-            CbUrlDoesNotExist: ERROR_ORG_OF_INTEREST_CB_URL_NOT_EXIST
+            CbUrlDoesNotExist: ERROR_CB_URL_NOT_EXIST,
+            OrgOfInterestCBURLNotExist: ERROR_ORG_OF_INTEREST_CB_URL_NOT_EXIST
 
         }
     )
@@ -235,7 +236,8 @@ class CrunchBaseFounder(APIView):
             TableDoesNotExist: ERROR_TABLE_DOES_NOT_EXIST,
             RowDoesNotExist: ERROR_ROW_DOES_NOT_EXIST,
             NoPermissionToTable: ERROR_NO_PERMISSION_TO_TABLE,
-            CbUrlDoesNotExist: ERROR_CB_URL_NOT_EXIST
+            CbUrlDoesNotExist: ERROR_CB_URL_NOT_EXIST,
+            OrgOfInterestCBURLNotExist: ERROR_ORG_OF_INTEREST_CB_URL_NOT_EXIST
 
         }
     )
@@ -440,6 +442,8 @@ class CrunchBaseFounder(APIView):
             AllProvidedMultipleSelectValuesMustBeSelectOption: ERROR_INVALID_SELECT_OPTION_VALUES,
             NoPermissionToTable: ERROR_NO_PERMISSION_TO_TABLE,
             UserFileDoesNotExist: ERROR_USER_FILE_DOES_NOT_EXIST,
+            CbUrlDoesNotExist: ERROR_CB_URL_NOT_EXIST,
+            OrgOfInterestCBURLNotExist: ERROR_ORG_OF_INTEREST_CB_URL_NOT_EXIST
         }
     )
     def patch_item(self, request: Request, table_id: int, row_id: int) -> Response:
