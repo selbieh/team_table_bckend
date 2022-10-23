@@ -36,8 +36,8 @@ from baserow.contrib.database.tokens.handler import TokenHandler
 from baserow.core.action.registries import action_type_registry
 from baserow.core.exceptions import UserNotInGroup
 from baserow.core.user_files.exceptions import UserFileDoesNotExist
-from baserow.t2.errors import ERROR_CB_URL_NOT_EXIST
-from baserow.t2.exceptions import CbUrlDoesNotExist
+from baserow.t2.errors import ERROR_CB_URL_NOT_EXIST, ERROR_ORG_OF_INTEREST_CB_URL_NOT_EXIST
+from baserow.t2.exceptions import CbUrlDoesNotExist, OrgOfInterestCBURLNotExist
 from baserow.t2.models.CrunchBaseLogs import CrunchBaseLogs
 from baserow.t2.serializers.crunch_base import CrunchBaseOrganizationSerializer, CrunchBaseFounderSerializer
 
@@ -52,7 +52,8 @@ class CrunchBaseOrganization(APIView):
             TableDoesNotExist: ERROR_TABLE_DOES_NOT_EXIST,
             RowDoesNotExist: ERROR_ROW_DOES_NOT_EXIST,
             NoPermissionToTable: ERROR_NO_PERMISSION_TO_TABLE,
-            CbUrlDoesNotExist: ERROR_CB_URL_NOT_EXIST
+            CbUrlDoesNotExist: ERROR_CB_URL_NOT_EXIST,
+            CbUrlDoesNotExist:ERROR_ORG_OF_INTEREST_CB_URL_NOT_EXIST
 
         }
     )
@@ -69,7 +70,6 @@ class CrunchBaseOrganization(APIView):
         serializer.is_valid(raise_exception=True)
         cb_url_field_name = serializer.validated_data['cb_url_field_name']
         cb_url_field_value = getattr(row, cb_url_field_name)
-        print(cb_url_field_value)
         if not cb_url_field_value:
             raise CbUrlDoesNotExist
         permalink = self.get_cb_url(request, cb_url_field_value)
@@ -77,6 +77,9 @@ class CrunchBaseOrganization(APIView):
         request.data.clear()
         request.data.update(self.map_cb_response_to_request_data(cb_call_response, serializer.validated_data))
         return self.patch_item(request, table_id, row_id)
+
+
+
 
     @extend_schema(
         parameters=[
@@ -151,6 +154,8 @@ class CrunchBaseOrganization(APIView):
             AllProvidedMultipleSelectValuesMustBeSelectOption: ERROR_INVALID_SELECT_OPTION_VALUES,
             NoPermissionToTable: ERROR_NO_PERMISSION_TO_TABLE,
             UserFileDoesNotExist: ERROR_USER_FILE_DOES_NOT_EXIST,
+            CbUrlDoesNotExist: ERROR_ORG_OF_INTEREST_CB_URL_NOT_EXIST
+
         }
     )
     def patch_item(self, request: Request, table_id: int, row_id: int) -> Response:
@@ -248,8 +253,9 @@ class CrunchBaseFounder(APIView):
         serializer = CrunchBaseFounderSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         cb_url_field_name = serializer.validated_data['cb_url_field_name']
+        org_of_interest_cb_url=self.validate_org_of_interest_cb_url(row,serializer.validated_data)
+        org_of_interest_cb_permalink=self.get_cb_url(request,org_of_interest_cb_url)
         cb_url_field_value = getattr(row, cb_url_field_name)
-        print(cb_url_field_value)
         if not cb_url_field_value or not cb_url_field_value[0]['value']:
             raise CbUrlDoesNotExist
         try:
@@ -259,8 +265,8 @@ class CrunchBaseFounder(APIView):
         permalink = self.get_cb_url(request, cb_url_field_value)
         cb_call_response = self.call_cb(request, permalink)
         given_date = self.given_date(request, serializer.validated_data, row)
-        company_of_interest = self.get_company_of_interest(request, serializer.validated_data, row)
-        filterd_response = self.filter_response(cb_call_response, given_date, company_of_interest)
+        #company_of_interest = self.get_company_of_interest(request, serializer.validated_data, row)
+        filterd_response = self.filter_response(cb_call_response, given_date, [org_of_interest_cb_permalink])
         calculated_filtered_response = self.calculate_resulte_for_filtered_response(request, filterd_response)
         raise_count, raised_values = calculated_filtered_response
         request.data.clear()
@@ -271,13 +277,27 @@ class CrunchBaseFounder(APIView):
         # request.data.update(self.map_cb_response_to_request_data(cb_call_response, serializer.validated_data))
         # return self.patch_item(request, table_id, row_id)
 
-    def get_company_of_interest(self, request, validated_data, row):
-        org_of_interest_uuid = []
-        column_value=getattr(row,validated_data.get('organization_of_interest_link_table')).all()
-        if column_value:
-            field_query_string=f'{validated_data.get("organization_of_interest_from_org_founder_map")}__'+f'{validated_data.get("organization_of_interest_cb_link")}'
-            org_of_interest_uuid=list(set(column_value.values_list(field_query_string,flat=True)))
-        return org_of_interest_uuid
+    def validate_org_of_interest_cb_url(self, row, validated_data):
+        row_value=getattr(row, validated_data.get('organization_of_interest_link_table')).all().first()
+        if not row_value:
+            raise OrgOfInterestCBURLNotExist
+        organization_of_interest_from_org_founder_map_value=getattr(row_value,validated_data.get('organization_of_interest_from_org_founder_map')).all().first()
+        if not organization_of_interest_from_org_founder_map_value:
+            raise OrgOfInterestCBURLNotExist
+        org_of_interest_cb_url=getattr(organization_of_interest_from_org_founder_map_value,validated_data.get('organization_of_interest_cb_link'))
+        if not org_of_interest_cb_url:
+            raise OrgOfInterestCBURLNotExist
+        return org_of_interest_cb_url
+
+        #organization_of_interest_cb_link
+
+    # def get_company_of_interest(self, request, validated_data, row):
+    #     org_of_interest_uuid = []
+    #     column_value=getattr(row,validated_data.get('organization_of_interest_link_table')).all()
+    #     if column_value:
+    #         field_query_string=f'{validated_data.get("organization_of_interest_from_org_founder_map")}__'+f'{validated_data.get("organization_of_interest_cb_link")}'
+    #         org_of_interest_uuid=list(set(column_value.values_list(field_query_string,flat=True)))
+    #     return org_of_interest_uuid
 
     def get_cb_url(self, request, cb_field_value):
         try:
@@ -293,7 +313,7 @@ class CrunchBaseFounder(APIView):
         all_founded_organizations = response.get('cards', {}).get('founded_organizations', [])
         filtered_founded_organizations_by_type = [item for item in all_founded_organizations if
                                                   'company_type' in item.keys() and item[
-                                                      'company_type'] == 'for_profit' and item.get('properties', {}).get('identifier', {}).get('uuid',None) not in company_of_interest]
+                                                      'company_type'] == 'for_profit' and item.get('properties', {}).get('identifier', {}).get('permalink',None) not in company_of_interest]
 
         # this step to exclude the org of intreset
         # filtered_founded_organizations_by_type_and_interest = [item for item in filtered_founded_organizations_by_type if
