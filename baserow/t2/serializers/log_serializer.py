@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from baserow.api.user.serializers import UserSerializer
 from baserow.api.utils import get_serializer_class
-from baserow.contrib.database.fields.models import Field, LinkRowField
+from baserow.contrib.database.fields.models import Field, LinkRowField, SelectOption
 from baserow.contrib.database.table.models import Table
 from baserow.core.action.models import Action
 
@@ -44,6 +44,7 @@ class FieldActionLogSerializer(serializers.ModelSerializer):
         replaced_new_values = {}
         for k, v in values.items():
             is_link_row = bool(LinkRowField.objects.filter(id=k.split('_')[1]))
+            is_multi_or_single_choice=bool(SelectOption.objects.filter(field_id=k.split('_')[1]))
             table_param = self.context['request'].query_params.get('table')
             row_param = self.context['request'].query_params.get('row')
             if v and isinstance(v, list) and all(
@@ -56,6 +57,9 @@ class FieldActionLogSerializer(serializers.ModelSerializer):
                     replaced_new_values[k] = serialized_date
                 else:
                     replaced_new_values[k] = v
+            elif v and is_multi_or_single_choice and table_param and row_param:
+                replaced_new_values[k] = [i.value for i in SelectOption.objects.filter(id__in=v if type(v) == list else [v])]
+
             else:
                 replaced_new_values[k] = v
         return replaced_new_values
