@@ -1,6 +1,6 @@
 from django.db import models
 
-from core.mixins import CreatedAndUpdatedOnMixin
+from baserow.core.mixins import CreatedAndUpdatedOnMixin
 
 
 class CrunchBaseLogs(CreatedAndUpdatedOnMixin):

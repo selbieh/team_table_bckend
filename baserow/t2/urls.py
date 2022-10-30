@@ -1,5 +1,7 @@
 from django.urls import path, re_path
 
+from .models import AdditionalTableData
+from .views.additional_table_data import AdditionalTableDataView
 from .views.crunch_base import CrunchBaseOrganization, CrunchBaseFounder
 from rest_framework.routers import DefaultRouter
 from django.urls import include
@@ -10,6 +12,7 @@ from baserow.t2.views.staff_users import StaffUserControlViewSet
 
 router=DefaultRouter()
 router.register('staff-control',StaffUserControlViewSet,basename='staff_control')
+router.register('table_additional_data',AdditionalTableDataView,basename='table-additional-data')
 
 
 app_name = "baserow.t2"
