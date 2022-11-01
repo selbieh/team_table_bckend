@@ -1,3 +1,4 @@
+from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers
 
 from baserow.api.user.serializers import UserSerializer
@@ -16,9 +17,19 @@ class FieldActionLogSerializer(serializers.ModelSerializer):
         table = Table.objects.get(id=t_id).get_model()
         row = table.objects.get(id=r_id)
         related_model = getattr(row, k).model
+
+        #if here to change all related_model and v=
+
         related_items = related_model.objects.filter(id__in=v)  # getattr(row, filed).all()
         if related_items and related_model:
-            return related_items, related_model, str(related_model).split('Table')[1].split('Model')[0]
+            table_id = str(related_model).split('Table')[1].split('Model')[0]
+            primary_field = Field.objects.get(table_id=table_id, primary=True)
+            if table_id and primary_field.content_type.model=='linkrowfield':
+                related_model = getattr(related_model.objects.get(id=related_items.first().id),f'{primary_field.db_column}').model
+                related_items=related_model.objects.filter(id__in=related_items.values(f'{primary_field.db_column}'))
+                table_id = str(related_model).split('Table')[1].split('Model')[0]
+
+            return related_items, related_model, table_id
         else:
             return None, None
 
@@ -54,6 +65,7 @@ class FieldActionLogSerializer(serializers.ModelSerializer):
                     field_to_serialize = self.find_serializer_field(table_id)
                     serialized_date = get_serializer_class(related_model, field_to_serialize)(related_items,
                                                                                               many=True).data
+                    #TODO may be here re serialize
                     replaced_new_values[k] = serialized_date
                 else:
                     replaced_new_values[k] = v
