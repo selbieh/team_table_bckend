@@ -7,7 +7,7 @@ from baserow.t2.serializers.addtional_table_data import AdditionalTableDataSeria
 
 
 class AdditionalTableDataView(ModelViewSet):
-    queryset = AdditionalTableData.objects.all()
+    queryset = AdditionalTableData.objects.exclude(trashed=True).order_by('-id')
     serializer_class = AdditionalTableDataSerializer
     pagination_class = LimitOffsetPagination
     permission_classes = [IsAuthenticated]
