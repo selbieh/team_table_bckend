@@ -7,6 +7,7 @@ from django.db import transaction
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import serializers
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -482,6 +483,26 @@ class CrunchBaseFounder(APIView):
                 model=model,
                 user_field_names=user_field_names,
             )
+        except ValidationError as exc:
+            raise RequestBodyValidationException(detail=exc.message) from exc
+
+        serializer_class = get_row_serializer_class(
+            model, RowSerializer, is_response=True, user_field_names=user_field_names
+        )
+        serializer = serializer_class(row)
+        return Response(serializer.data)
+
+
+
+class CustomerRequestView(RetrieveAPIView):
+    permission_classes = []
+    authentication_classes = []
+    def get(self, request,request_id):
+        table = TableHandler().get_table(93)
+        user_field_names = "user_field_names" in request.GET
+        model = table.get_model()
+        try:
+            row = table.get_model().objects.get(field_578=request_id)
         except ValidationError as exc:
             raise RequestBodyValidationException(detail=exc.message) from exc
 

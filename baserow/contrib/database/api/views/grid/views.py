@@ -248,7 +248,7 @@ class GridViewView(APIView):
         include_fields = request.GET.get("include_fields")
         exclude_fields = request.GET.get("exclude_fields")
 
-        view_handler = ViewHandler()
+        view_handler = ViewHandler(user=request.user)
         view = view_handler.get_view(view_id, GridView)
         view_type = view_type_registry.get_by_model(view)
 

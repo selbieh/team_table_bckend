@@ -2,7 +2,7 @@ from django.urls import path, re_path
 
 from .models import AdditionalTableData
 from .views.additional_table_data import AdditionalTableDataView
-from .views.crunch_base import CrunchBaseOrganization, CrunchBaseFounder
+from .views.crunch_base import CrunchBaseOrganization, CrunchBaseFounder ,CustomerRequestView
 from rest_framework.routers import DefaultRouter
 from django.urls import include
 
@@ -23,4 +23,5 @@ urlpatterns =[
     path('',include(router.urls)),
     path( "row-comment/<int:table_id>/<int:row_id>/",RowCommentView.as_view(),name="item"),
     path( "field-logs/",FieldActionLogsView.as_view(),name="logs"),
+    path( "customer-request/<int:request_id>/",CustomerRequestView.as_view(),name="logs"),
 ]

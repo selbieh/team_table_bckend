@@ -1,5 +1,6 @@
 import secrets
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password, make_password
 from django.contrib.contenttypes.models import ContentType
 from django.db import models, transaction
@@ -276,6 +277,7 @@ class ViewFilter(models.Model):
         blank=True,
         help_text="The filter value that must be compared to the field's value.",
     )
+    user=models.ForeignKey(get_user_model(),null=True, blank=True,on_delete=models.CASCADE)
 
     class Meta:
         ordering = ("id",)

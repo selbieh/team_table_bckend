@@ -90,6 +90,10 @@ FieldOptionsDict = Dict[int, Dict[str, Any]]
 
 class ViewHandler:
     PUBLIC_VIEW_TOKEN_ALGORITHM = "HS256"  # nosec
+    
+    def __init__(self,user=None):
+        self.user=user
+        super(ViewHandler, self).__init__()
 
     def get_view(
         self,
@@ -474,7 +478,7 @@ class ViewHandler:
             raise ValueError("A queryset of the table model is required.")
 
         filter_builder = FilterBuilder(filter_type=view.filter_type)
-        for view_filter in view.viewfilter_set.all():
+        for view_filter in view.viewfilter_set.filter(user=self.user):
             if view_filter.field_id not in model._field_objects:
                 raise ValueError(
                     f"The table model does not contain field "
@@ -610,6 +614,7 @@ class ViewHandler:
             field=field,
             type=view_filter_type.type,
             value=value,
+            user=user
         )
 
         # Call view type hooks
