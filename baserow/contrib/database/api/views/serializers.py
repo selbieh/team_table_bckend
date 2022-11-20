@@ -311,6 +311,15 @@ class ViewSerializer(serializers.ModelSerializer):
         return view.type
 
 
+
+
+class ViewReadSerializer(ViewSerializer):
+    filters = serializers.SerializerMethodField()
+
+
+    def get_filters(self, instance):
+        return ViewFilterSerializer(instance.viewfilter_set.filter(user=self.context['request'].user),many=True).data
+
 class CreateViewSerializer(serializers.ModelSerializer):
     type = serializers.ChoiceField(
         choices=lazy(view_type_registry.get_types, list)(), required=True

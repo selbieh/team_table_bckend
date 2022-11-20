@@ -111,7 +111,7 @@ from .serializers import (
     CreateViewDecorationSerializer,
     UpdateViewDecorationSerializer,
     PublicViewAuthRequestSerializer,
-    PublicViewAuthResponseSerializer,
+    PublicViewAuthResponseSerializer, ViewReadSerializer,
 )
 from .errors import (
     ERROR_NO_AUTHORIZATION_TO_PUBLICLY_SHARED_VIEW,
@@ -235,10 +235,10 @@ class ViewsView(APIView):
         data = [
             view_type_registry.get_serializer(
                 view,
-                ViewSerializer,
+                ViewReadSerializer,
                 filters=filters,
                 sortings=sortings,
-                decorations=decorations,
+                decorations=decorations,context={"request":request}
             ).data
             for view in views
         ]
