@@ -362,9 +362,10 @@ class CrunchBaseFounder(APIView):
         for company in filtered_response:
             baseurl = f"https://api.crunchbase.com/api/v4/entities/organizations/{company['identifier']['uuid']}"
             url = f'{baseurl}?card_ids=fields&user_key={settings.CB_KEY}'
-            company_response = requests.get(url).json()
+            company_response = requests.get(url)#.json()
             if not company_response.status_code == 200:
                 raise CbUrlDoesNotExist
+            company_response = requests.get(url).json()
             company_raised_value = company_response.get('cards', {}).get('fields', {}).get('funding_total', {}).get(
                 'value', 0)
             if company_raised_value:
