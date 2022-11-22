@@ -1,4 +1,5 @@
 import datetime
+import json
 
 import requests
 from django.conf import settings
@@ -27,6 +28,7 @@ from baserow.contrib.database.api.tables.errors import ERROR_TABLE_DOES_NOT_EXIS
 from baserow.contrib.database.api.tokens.authentications import TokenAuthentication
 from baserow.contrib.database.api.tokens.errors import ERROR_NO_PERMISSION_TO_TABLE
 from baserow.contrib.database.fields.exceptions import AllProvidedMultipleSelectValuesMustBeSelectOption
+from baserow.contrib.database.fields.models import Field
 from baserow.contrib.database.rows.actions import UpdateRowActionType
 from baserow.contrib.database.rows.exceptions import RowDoesNotExist
 from baserow.contrib.database.rows.handler import RowHandler
@@ -216,6 +218,8 @@ class CrunchBaseOrganization(APIView):
         baseurl = f"https://api.crunchbase.com/api/v4/entities/organizations/{cb_permalink}"
         url = f'{baseurl}?card_ids=fields&user_key={settings.CB_KEY}'  ###--->>['cards']['funding_total']
         response = requests.request("GET", url)
+        if not response.status_code ==200:
+            raise CbUrlDoesNotExist
         CrunchBaseLogs.objects.create(url=baseurl, response=response.json(), entity_type=CrunchBaseLogs.ORGANIZATION)
         return response.json()
 
@@ -335,6 +339,8 @@ class CrunchBaseFounder(APIView):
         baseurl = f"https://api.crunchbase.com/api/v4/entities/people/{cb_permalink}"
         url = f'{baseurl}?card_ids=founded_organizations&user_key={settings.CB_KEY}'
         response = requests.request("GET", url)
+        if not response.status_code ==200:
+            raise CbUrlDoesNotExist
         CrunchBaseLogs.objects.create(url=baseurl, response=response.json(), entity_type=CrunchBaseLogs.FOUNDER)
         return response.json()
 
@@ -357,6 +363,8 @@ class CrunchBaseFounder(APIView):
             baseurl = f"https://api.crunchbase.com/api/v4/entities/organizations/{company['identifier']['uuid']}"
             url = f'{baseurl}?card_ids=fields&user_key={settings.CB_KEY}'
             company_response = requests.get(url).json()
+            if not company_response.status_code == 200:
+                raise CbUrlDoesNotExist
             company_raised_value = company_response.get('cards', {}).get('fields', {}).get('funding_total', {}).get(
                 'value', 0)
             if company_raised_value:
@@ -510,4 +518,7 @@ class CustomerRequestView(RetrieveAPIView):
             model, RowSerializer, is_response=True, user_field_names=user_field_names
         )
         serializer = serializer_class(row)
-        return Response(serializer.data)
+        data=serializer.data
+        fields_key = {f'field_{i.id}':i.name for i in Field.objects.filter(table=table)}
+        new_data={fields_key.get(k) if k not in ['id'] else k:v for k,v in data.items()}
+        return Response(new_data)
