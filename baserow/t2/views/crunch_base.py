@@ -521,5 +521,30 @@ class CustomerRequestView(RetrieveAPIView):
         serializer = serializer_class(row)
         data=serializer.data
         fields_key = {f'field_{i.id}':i.name for i in Field.objects.filter(table=table)}
-        new_data={fields_key.get(k) if k not in ['id'] else k:v for k,v in data.items()}
+        new_data={fields_key.get(k) if k not in ['id','order'] else k:v for k,v in data.items()}
+        return Response(new_data)
+
+
+
+class OrgFounderMapView(RetrieveAPIView):
+    permission_classes = []
+    authentication_classes = []
+    def get(self, request,request_id):
+        table = TableHandler().get_table(54)
+        user_field_names = "user_field_names" in request.GET
+        model = table.get_model()
+        try:
+            rows = table.get_model().objects.filter(field_593__field_578=request_id)
+        except ValidationError as exc:
+            raise RequestBodyValidationException(detail=exc.message) from exc
+
+        serializer_class = get_row_serializer_class(
+            model, RowSerializer, is_response=True, user_field_names=user_field_names
+        )
+        serializer = serializer_class(rows,many=True)
+        data=serializer.data
+        fields_key = {f'field_{i.id}':i.name for i in Field.objects.filter(table=table)}
+        new_data=[]
+        for row in data:
+            new_data.append({fields_key.get(k) if k not in ['id','order'] else k:v for k,v in row.items()})
         return Response(new_data)
