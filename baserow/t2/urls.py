@@ -2,7 +2,8 @@ from django.urls import path, re_path
 
 from .models import AdditionalTableData
 from .views.additional_table_data import AdditionalTableDataView
-from .views.crunch_base import CrunchBaseOrganization, CrunchBaseFounder, CustomerRequestView, OrgFounderMapView
+from .views.crunch_base import CrunchBaseOrganization, CrunchBaseFounder, CustomerRequestView, OrgFounderMapView, \
+    GetLastId, LisTable, ListField, TableContent
 from rest_framework.routers import DefaultRouter
 from django.urls import include
 
@@ -25,4 +26,9 @@ urlpatterns =[
     path( "field-logs/",FieldActionLogsView.as_view(),name="logs"),
     path( "customer-request/<int:request_id>/",CustomerRequestView.as_view(),name="logs"),
     path( "org-founder-map/<int:request_id>/",OrgFounderMapView.as_view(),name="logs"),
+    path( "list-tabels/",LisTable.as_view(),name="tables"),
+    path( "list-fields/",ListField.as_view(),name="fields"),
+    path( "get-table-content/<int:table_id>/",TableContent.as_view(),name="content"),
+    path("get-last-id/<int:table_id>/<int:field_id>/", GetLastId.as_view(), name="last_id"),
+
 ]

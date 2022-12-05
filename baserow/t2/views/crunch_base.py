@@ -5,10 +5,13 @@ import requests
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import transaction
+from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import serializers
-from rest_framework.generics import RetrieveAPIView
+from rest_framework.decorators import permission_classes
+from rest_framework.generics import RetrieveAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -21,23 +24,28 @@ from baserow.api.schemas import get_error_schema, CLIENT_SESSION_ID_SCHEMA_PARAM
 from baserow.api.user_files.errors import ERROR_USER_FILE_DOES_NOT_EXIST
 from baserow.api.utils import validate_data
 from baserow.contrib.database.api.fields.errors import ERROR_INVALID_SELECT_OPTION_VALUES
+from baserow.contrib.database.api.fields.serializers import FieldSerializer
 from baserow.contrib.database.api.rows.errors import ERROR_ROW_DOES_NOT_EXIST
 from baserow.contrib.database.api.rows.serializers import get_row_serializer_class, RowSerializer, \
     get_example_row_serializer_class
 from baserow.contrib.database.api.tables.errors import ERROR_TABLE_DOES_NOT_EXIST
+from baserow.contrib.database.api.tables.serializers import TableSerializer
 from baserow.contrib.database.api.tokens.authentications import TokenAuthentication
 from baserow.contrib.database.api.tokens.errors import ERROR_NO_PERMISSION_TO_TABLE
 from baserow.contrib.database.fields.exceptions import AllProvidedMultipleSelectValuesMustBeSelectOption
 from baserow.contrib.database.fields.models import Field
+from baserow.contrib.database.models import Database
 from baserow.contrib.database.rows.actions import UpdateRowActionType
 from baserow.contrib.database.rows.exceptions import RowDoesNotExist
 from baserow.contrib.database.rows.handler import RowHandler
 from baserow.contrib.database.table.exceptions import TableDoesNotExist
 from baserow.contrib.database.table.handler import TableHandler
+from baserow.contrib.database.table.models import Table
 from baserow.contrib.database.tokens.exceptions import NoPermissionToTable
 from baserow.contrib.database.tokens.handler import TokenHandler
 from baserow.core.action.registries import action_type_registry
 from baserow.core.exceptions import UserNotInGroup
+from baserow.core.models import Group
 from baserow.core.user_files.exceptions import UserFileDoesNotExist
 from baserow.t2.errors import ERROR_CB_URL_NOT_EXIST, ERROR_ORG_OF_INTEREST_CB_URL_NOT_EXIST
 from baserow.t2.exceptions import CbUrlDoesNotExist, OrgOfInterestCBURLNotExist
@@ -548,3 +556,46 @@ class OrgFounderMapView(RetrieveAPIView):
         for row in data:
             new_data.append({fields_key.get(k) if k not in ['id','order'] else k:v for k,v in row.items()})
         return Response(new_data)
+
+
+
+class GetLastId(APIView):
+    def get(self,request,table_id,field_id):
+        tabel = get_object_or_404(Table, id=table_id)
+        model=tabel.get_model()
+        obj=model.objects.last()
+        item=getattr(obj,f'field_{field_id}')
+        return Response({"last_id":item})
+
+
+class LisTable(ListAPIView):
+    permission_classes = []
+    serializer_class = TableSerializer
+    queryset = Table.objects.filter(database__in=Database.objects.filter(group__in=Group.objects.filter(name=settings.TRIBAL_GROUP_NAME)))
+
+
+class ListField(ListAPIView):
+    serializer_class = FieldSerializer
+    queryset = Field.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields=['table_id']
+
+
+
+class TableContent(ListAPIView):
+
+    permission_classes = []
+
+    def get_queryset(self):
+        table=get_object_or_404(Table,id=self.kwargs['table_id'])
+        model=table.get_model()
+        return model.objects.filter(trashed=False)
+
+
+    def get_serializer_class(self):
+        table = get_object_or_404(Table, id=self.kwargs['table_id'])
+        model = table.get_model()
+        serializer_class = get_row_serializer_class(
+            model, RowSerializer, is_response=True, user_field_names=None
+        )
+        return serializer_class
