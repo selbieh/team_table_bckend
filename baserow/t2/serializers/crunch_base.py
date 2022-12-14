@@ -20,3 +20,10 @@ class CrunchBaseFounderSerializer(serializers.Serializer):
     organization_of_interest_link_table=serializers.CharField()
     organization_of_interest_from_org_founder_map=serializers.CharField()
     organization_of_interest_cb_link=serializers.CharField()
+
+
+
+
+class CrunchBasePersonSerializer(serializers.Serializer):
+    cb_url_field_name = serializers.CharField()
+    cb_uuid_field_name = serializers.CharField()
