@@ -6,6 +6,7 @@ import requests
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import transaction
+from django.db.models import Max
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.types import OpenApiTypes
@@ -825,10 +826,10 @@ class OrgFounderMapView(RetrieveAPIView):
 class GetLastId(APIView):
     def get(self,request,table_id,field_id):
         tabel = get_object_or_404(Table, id=table_id)
+        get_object_or_404(Field,id=field_id,table=tabel)
         model=tabel.get_model()
-        obj=model.objects.last()
-        item=getattr(obj,f'field_{field_id}')
-        return Response({"last_id":item})
+        obj=model.objects.aggregate(max_id=Max(f'field_{field_id}'))
+        return Response(obj)
 
 
 class LisTable(ListAPIView):
