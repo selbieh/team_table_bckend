@@ -238,7 +238,8 @@ class CrunchBaseOrganization(APIView):
         return {
             validated_data['cb_uuid_field_name']: cb_call_response['properties']['identifier']['uuid'],
             validated_data['company_total_raised_value_field_name']:
-                cb_call_response.get('cards', {}).get('fields', {}).get('funding_total', {}).get('value', 0)
+                cb_call_response.get('cards', {}).get('fields', {}).get('funding_total', {}).get('value', 0),
+            validated_data['cb_updated_at']:str(datetime.datetime.now())
         }
 
 
