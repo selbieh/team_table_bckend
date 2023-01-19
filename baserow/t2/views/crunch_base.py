@@ -1,6 +1,7 @@
 import datetime
 import json
 from collections.abc import Iterable
+from django.utils import timezone
 
 import requests
 from django.conf import settings
@@ -76,6 +77,7 @@ class CrunchBaseOrganization(APIView):
         cb means crunch base,
         """
 
+        print(datetime.date.today().isoformat())
         table = TableHandler().get_table(table_id)
         TokenHandler().check_table_permissions(request, "read", table, False)
         model = table.get_model()
@@ -239,7 +241,7 @@ class CrunchBaseOrganization(APIView):
             validated_data['cb_uuid_field_name']: cb_call_response['properties']['identifier']['uuid'],
             validated_data['company_total_raised_value_field_name']:
                 cb_call_response.get('cards', {}).get('fields', {}).get('funding_total', {}).get('value', 0),
-            validated_data['cb_updated_at']:str(datetime.datetime.now())
+            validated_data['cb_updated_at']:str(datetime.date.today())
         }
 
 
@@ -390,7 +392,8 @@ class CrunchBaseFounder(APIView):
         return {
             validated_data['company_prev_raised_count_field_name']: raise_count,
             validated_data['company_total_raised_value_field_name']: raised_values,
-            validated_data['cb_uuid_field_name']:cb__uuid4
+            validated_data['cb_uuid_field_name']:cb__uuid4,
+            validated_data['cb_updated_at']:str(datetime.date.today())
         }
 
     @extend_schema(
@@ -649,7 +652,9 @@ class CrunchBasePerson(APIView):
     def map_data(self, request, validated_data,cb__uuid4):
         return {
 
-            validated_data['cb_uuid_field_name']:cb__uuid4
+            validated_data['cb_uuid_field_name']:cb__uuid4,
+            validated_data['cb_updated_at']: str(datetime.date.today()),
+
         }
 
     @extend_schema(
