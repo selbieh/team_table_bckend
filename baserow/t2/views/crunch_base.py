@@ -652,8 +652,8 @@ class CrunchBasePerson(APIView):
     def map_data(self, request, validated_data,cb__uuid4):
         return {
 
-            validated_data['cb_uuid_field_name']:cb__uuid4,
-            validated_data['cb_updated_at']: str(datetime.date.today()),
+          validated_data['cb_uuid_field_name']:cb__uuid4,
+          #validated_data['cb_updated_at']:datetime.date.today().isoformat(),
 
         }
 
