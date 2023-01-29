@@ -277,6 +277,10 @@ class CrunchBaseFounder(APIView):
         org_of_interest_cb_url=self.validate_org_of_interest_cb_url(row,serializer.validated_data)
         org_of_interest_cb_permalink=self.get_cb_url(request,org_of_interest_cb_url)
         cb_url_field_value = getattr(row, cb_url_field_name)
+        try:
+            cb_url_field_value=json.loads(cb_url_field_value)
+        except:
+            pass
         if not cb_url_field_value or not isinstance(cb_url_field_value, Iterable) or not cb_url_field_value[0]['value']:
             raise CbUrlDoesNotExist
         try:
@@ -393,7 +397,7 @@ class CrunchBaseFounder(APIView):
             validated_data['company_prev_raised_count_field_name']: raise_count,
             validated_data['company_total_raised_value_field_name']: raised_values,
             validated_data['cb_uuid_field_name']:cb__uuid4,
-            validated_data['cb_updated_at']:str(datetime.date.today())
+            #validated_data['cb_updated_at']:str(datetime.date.today())
         }
 
     @extend_schema(
