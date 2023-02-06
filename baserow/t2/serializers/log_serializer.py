@@ -39,32 +39,23 @@ class FieldActionLogSerializer(serializers.ModelSerializer):
         return fields
 
     def get_params(self, obj):
+
         new_row_values = obj.params.get('new_row_values', None)
         original_row_values = obj.params.get('original_row_values', None)
         new_rows =obj.params.get('new_rows', None)
-        original_rows_values =obj.params.get('original_rows_values', None)
-
-        if original_row_values and not type(original_row_values)==list:
+        if original_row_values:
             original_row_values_serialized = self.re_serializer_nested_row(original_row_values)
             obj.params.update({'original_row_values': original_row_values_serialized})
-        if new_row_values  and not type(new_row_values)==list :
+        if new_row_values:
             new_row_values_serialized = self.re_serializer_nested_row(new_row_values)
             obj.params.update({'new_row_values': new_row_values_serialized})
         if new_rows:
             new_rows_items=[]
             for i in new_rows:
                 i.pop("id")
-                new_rows_items.append(i)
-            # new_row_values_serialized =[self.re_serializer_nested_row(i) for i in new_rows_items]
-            obj.params.update({'new_row_values': new_rows_items})
-        if original_rows_values:
-            original_rows_items = []
-            for i in original_rows_values:
-                i.pop("id")
-                original_rows_items.append(i)
-            # new_row_values_serialized =[self.re_serializer_nested_row(i) for i in new_rows_items]
-            obj.params.update({'original_rows_values': original_rows_items})
-
+                new_rows_items.append(new_rows_items)
+            new_row_values_serialized =[self.re_serializer_nested_row(i) for i in new_rows_items]
+            obj.params.update({'new_row_values': new_row_values_serialized})
         return obj.params
 
     def re_serializer_nested_row(self, values):
