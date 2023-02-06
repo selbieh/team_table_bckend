@@ -528,6 +528,7 @@ class UpdateRowsActionType(ActionType):
         table_id: int
         original_rows_values: List
         new_rows: List
+        row_ids:List
 
     @classmethod
     def do(
@@ -576,7 +577,8 @@ class UpdateRowsActionType(ActionType):
             user, table, rows, model=model, rows_to_update=original_rows
         )
 
-        params = cls.Params(table.id, original_rows_values, new_rows)
+        params = cls.Params(table.id, original_rows_values, new_rows,row_ids)
+        print(params)
 
         cls.register_action(user, params, cls.scope(table.id))
 
