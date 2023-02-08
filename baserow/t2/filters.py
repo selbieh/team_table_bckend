@@ -12,13 +12,7 @@ class ModelContainJsonFilter(filters.FilterSet):
         if name and value:
             return queryset.filter(scope=f'table{value}').filter(params__table_id=int(value))
         return queryset
-    def get_field(self,queryset,name,value):
-
-        if name and value:
-            return queryset.filter(params__new_row_values__has_key=int(value))
-        return queryset
     def get_row(self,queryset,name,value):
-
         if name and value:
             return queryset.filter(params__row_id=int(value))
         return queryset

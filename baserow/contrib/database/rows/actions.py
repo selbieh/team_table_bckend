@@ -5,6 +5,7 @@ from decimal import Decimal
 from typing import Any, Dict, Optional, Type, List
 
 from django.contrib.auth.models import AbstractUser
+
 from baserow.contrib.database.table.handler import TableHandler
 
 from baserow.core.action.models import Action
@@ -528,6 +529,7 @@ class UpdateRowsActionType(ActionType):
         table_id: int
         original_rows_values: List
         new_rows: List
+        row_ids: List
 
     @classmethod
     def do(
@@ -563,12 +565,29 @@ class UpdateRowsActionType(ActionType):
         original_rows = row_handler.get_rows_for_update(model, row_ids)
 
         original_rows_values = []
+        print("roooooooooow")
+        print(original_rows)
         for row in original_rows:
+            print("orignal row")
+            print(row)
             original_row_values = row_handler.get_internal_values_for_fields(
                 row, rows_keys_map[row.id]
             )
             original_row_values["id"] = row.id
             original_rows_values.append(original_row_values)
+
+            from baserow.api.sessions import get_untrusted_client_session_id
+            session = get_untrusted_client_session_id(user)
+            filtered_items=[item for item in rows if item.get("id")==row.id]
+            x=Action.objects.create(
+                user=user,
+                type="update_row",
+                params={"row_id":row.id,"original_row_values":original_row_values,"new_row_values":filtered_items[0] if filtered_items else {}},
+                scope="update_row",
+                session=f'bulk_{session}',
+            )
+            print("x")
+            print(x.id)
 
         new_rows = deepcopy(rows)
 
@@ -576,7 +595,7 @@ class UpdateRowsActionType(ActionType):
             user, table, rows, model=model, rows_to_update=original_rows
         )
 
-        params = cls.Params(table.id, original_rows_values, new_rows)
+        params = cls.Params(table.id, original_rows_values, new_rows,list(row_ids))
 
         cls.register_action(user, params, cls.scope(table.id))
 

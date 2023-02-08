@@ -11,6 +11,8 @@ from baserow.core.action.models import Action
 class FieldActionLogSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     params = serializers.SerializerMethodField()
+    created_on=serializers.DateTimeField()
+    action_type=serializers.CharField(source='type')
 
     @staticmethod
     def find_reversed_link_row(t_id, r_id, v, k):
@@ -49,13 +51,7 @@ class FieldActionLogSerializer(serializers.ModelSerializer):
         if new_row_values:
             new_row_values_serialized = self.re_serializer_nested_row(new_row_values)
             obj.params.update({'new_row_values': new_row_values_serialized})
-        if new_rows:
-            new_rows_items=[]
-            for i in new_rows:
-                i.pop("id")
-                new_rows_items.append(new_rows_items)
-            new_row_values_serialized =[self.re_serializer_nested_row(i) for i in new_rows_items]
-            obj.params.update({'new_row_values': new_row_values_serialized})
+        #
         return obj.params
 
     def re_serializer_nested_row(self, values):
