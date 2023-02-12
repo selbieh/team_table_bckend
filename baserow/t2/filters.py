@@ -10,7 +10,7 @@ class ModelContainJsonFilter(filters.FilterSet):
 
     def get_table(self, queryset, name, value):
         if name and value:
-            return queryset.filter(scope=f'table{value}').filter(params__table_id=int(value))
+            return queryset.filter(scope=f'table{value}')#.filter(params__table_id=int(value))
         return queryset
     def get_row(self,queryset,name,value):
         if name and value:
