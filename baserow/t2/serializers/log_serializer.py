@@ -57,8 +57,10 @@ class FieldActionLogSerializer(serializers.ModelSerializer):
     def re_serializer_nested_row(self, values):
         replaced_new_values = {}
         for k, v in values.items():
-            is_link_row = bool(LinkRowField.objects.filter(id=k.split('_')[1]))
-            is_multi_or_single_choice=bool(SelectOption.objects.filter(field_id=k.split('_')[1]))
+            print(k)
+            print(v)
+            is_link_row = k != "id" and bool(LinkRowField.objects.filter(id=k.split('_')[1]))
+            is_multi_or_single_choice= k != "id"  and bool(SelectOption.objects.filter(field_id=k.split('_')[1]))
             table_param = self.context['request'].query_params.get('table')
             row_param = self.context['request'].query_params.get('row')
             if v and isinstance(v, list) and all(
