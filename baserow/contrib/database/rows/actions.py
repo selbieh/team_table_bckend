@@ -29,6 +29,7 @@ class CreateRowActionType(ActionType):
     class Params:
         table_id: int
         row_id: int
+        new_row_values:dict
 
     @classmethod
     def do(
@@ -68,8 +69,10 @@ class CreateRowActionType(ActionType):
             before_row=before_row,
             user_field_names=user_field_names,
         )
-
-        params = cls.Params(table.id, row.id)
+        print(values)
+        print(type(values))
+        print(dict(values))
+        params = cls.Params(table.id, row.id,dict(values))
         cls.register_action(user, params, cls.scope(table.id))
 
         return row
