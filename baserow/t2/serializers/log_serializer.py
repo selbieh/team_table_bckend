@@ -16,6 +16,11 @@ class FieldActionLogSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def find_reversed_link_row(t_id, r_id, v, k):
+        print("inside")
+        print(t_id)
+        print(r_id)
+        print(v)
+        print(k)
         table = Table.objects.get(id=t_id).get_model()
         row = table.objects.get(id=r_id)
         related_model = getattr(row, k).model
@@ -33,7 +38,7 @@ class FieldActionLogSerializer(serializers.ModelSerializer):
 
             return related_items, related_model, table_id
         else:
-            return None, None
+            return None, None ,None
 
     @staticmethod
     def find_serializer_field(table):
@@ -57,12 +62,11 @@ class FieldActionLogSerializer(serializers.ModelSerializer):
     def re_serializer_nested_row(self, values):
         replaced_new_values = {}
         for k, v in values.items():
-            print(k)
-            print(v)
             is_link_row = k != "id" and bool(LinkRowField.objects.filter(id=k.split('_')[1]))
             is_multi_or_single_choice= k != "id"  and bool(SelectOption.objects.filter(field_id=k.split('_')[1]))
             table_param = self.context['request'].query_params.get('table')
             row_param = self.context['request'].query_params.get('row')
+            print(v)
             if v and isinstance(v, list) and all(
                     [type(i) is int for i in v]) and is_link_row and table_param and row_param:
                 related_items, related_model, table_id = self.find_reversed_link_row(table_param, row_param, v, k)
